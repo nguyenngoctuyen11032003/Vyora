@@ -1,15 +1,26 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Barlow_Condensed, Be_Vietnam_Pro, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const bodyFont = Be_Vietnam_Pro({
+  variable: "--font-body",
+  subsets: ["latin", "vietnamese"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const displayFont = Barlow_Condensed({
+  variable: "--font-display",
+  subsets: ["latin", "vietnamese"],
+  weight: ["500", "600", "700"],
+  display: "swap",
+});
+
+const monoFont = JetBrains_Mono({
+  variable: "--font-mono",
+  subsets: ["latin", "vietnamese"],
+  weight: ["400", "500"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -32,7 +43,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0a0c09",
+  viewportFit: "cover",
+  themeColor: "#0a0b0a",
   colorScheme: "dark",
 };
 
@@ -44,7 +56,7 @@ export default function RootLayout({
   return (
     <html
       lang="vi"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${bodyFont.variable} ${displayFont.variable} ${monoFont.variable} h-full antialiased`}
     >
       <body className="min-h-full">{children}</body>
     </html>

@@ -1,18 +1,26 @@
 @import "tailwindcss";
 
-/* Dark-only by design: matches the logo and in-gym use. Radius scale: surfaces 16px, controls 12px, chips full. */
+/*
+ * Dark-only by design: matches the logo and in-gym use.
+ * Visual language: architectural drawing — hairline rules, a faint blueprint grid,
+ * measured labels in mono and condensed display numerals. One accent (lime).
+ * Radius scale: surfaces 20px, controls 12px, chips 6px.
+ */
 :root {
-  --background: #0b0c0b;
-  --foreground: #eef0ec;
-  --card: #131513;
-  --card-elevated: #191c19;
-  --muted: #202420;
-  --muted-foreground: #a0a69d;
-  --border: #262a26;
-  --border-strong: #353b35;
+  --background: #0a0b0a;
+  --foreground: #eef0ea;
+  --card: #111311;
+  --card-elevated: #171a17;
+  --muted: #1e221e;
+  --muted-foreground: #9aa196;
+  --subtle-foreground: #6c7368;
+  --border: #232723;
+  --border-strong: #343a33;
   --accent: #c2ec6b;
+  --accent-soft: rgb(194 236 107 / 12%);
   --accent-foreground: #11140c;
   --danger: #ff7770;
+  --grid-line: rgb(238 240 234 / 3.2%);
 }
 
 @theme inline {
@@ -22,13 +30,16 @@
   --color-card-elevated: var(--card-elevated);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  --color-subtle-foreground: var(--subtle-foreground);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
   --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
   --color-accent-foreground: var(--accent-foreground);
   --color-danger: var(--danger);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
 }
 
 * {
@@ -46,9 +57,35 @@ body {
   min-height: 100dvh;
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+}
+
+/* Blueprint grid with a soft vignette, fixed behind all content. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(120% 70% at 85% -10%, rgb(194 236 107 / 7%), transparent 55%),
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: auto, 48px 48px, 48px 48px;
+  background-position: 0 0, -1px -1px, -1px -1px;
+  mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
 }
 
 button,
@@ -77,14 +114,70 @@ button {
   font-variant-numeric: tabular-nums;
 }
 
+/* Small measured label, used like an annotation on a drawing. */
+.label-mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Corner crop marks on a surface. */
+.crop-marks {
+  position: relative;
+}
+
+.crop-marks::before,
+.crop-marks::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  border-color: var(--accent);
+  opacity: 0.7;
+}
+
+.crop-marks::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+  border-top-left-radius: 4px;
+}
+
+.crop-marks::after {
+  right: -1px;
+  bottom: -1px;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+  border-bottom-right-radius: 4px;
+}
+
+/* Fine ruler ticks along a hairline. */
+.ruler {
+  height: 8px;
+  background-image:
+    linear-gradient(90deg, var(--border-strong) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 48px 8px, 8px 4px;
+  background-repeat: repeat-x;
+  background-position: 0 0, 0 4px;
+}
+
+.pb-safe {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
 .reveal-in {
-  animation: reveal-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: reveal-in 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes reveal-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;

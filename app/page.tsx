@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <div className="min-h-dvh text-foreground">
       <AppHeader />
-      <main>
+      <main id="main" tabIndex={-1} className="outline-none">
         <PageContainer>
           <WorkoutHero />
           <WorkoutPlanner initialDayId="monday" initialTodayId="monday" plan={workoutPlan} />

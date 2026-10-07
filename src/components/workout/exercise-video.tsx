@@ -22,7 +22,7 @@ export function ExerciseVideo({ video }: { video: ExerciseVideoType }) {
     <div className="mx-auto" style={portrait ? { width: "min(100%, calc(58dvh * 9 / 16))" } : undefined}>
       <div
         className={cn(
-          "relative overflow-hidden rounded-2xl border border-border bg-[#050605]",
+          "relative overflow-hidden rounded-[20px] border border-border-strong bg-[#050605] shadow-[0_24px_60px_-30px_rgb(0_0_0/0.9)]",
           portrait ? "aspect-[9/16]" : "aspect-video w-full",
         )}
       >
@@ -40,7 +40,7 @@ export function ExerciseVideo({ video }: { video: ExerciseVideoType }) {
       </div>
       {watchUrl && (
         <a
-          className="mt-3 inline-flex min-h-11 items-center gap-1.5 rounded-xl text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-xl border border-border-strong px-4 text-sm font-medium text-muted-foreground transition-[background-color,border-color,color] duration-200 hover:border-accent hover:text-foreground"
           href={watchUrl}
           rel="noopener noreferrer"
           target="_blank"

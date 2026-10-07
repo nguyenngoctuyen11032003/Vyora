@@ -22,7 +22,7 @@ export function ExerciseDetailDialog({ exercise, open, onOpenChange }: ExerciseD
   if (isDesktop) {
     return (
       <Dialog onOpenChange={onOpenChange} open={open}>
-        <DialogContent className="flex max-h-[90dvh] max-w-4xl gap-0 overflow-hidden rounded-2xl border-border-strong bg-card-elevated p-0 text-foreground shadow-[0_32px_96px_rgb(0_0_0/0.55)] sm:rounded-2xl" data-testid="exercise-dialog">
+        <DialogContent className="flex max-h-[90dvh] max-w-5xl gap-0 overflow-hidden rounded-[28px] border-border-strong bg-card-elevated p-0 text-foreground shadow-[0_40px_120px_-20px_rgb(0_0_0/0.75)] sm:rounded-[28px]" data-testid="exercise-dialog">
           <ExerciseDetailContent exercise={exercise} onClose={() => onOpenChange(false)} variant="dialog" />
         </DialogContent>
       </Dialog>
