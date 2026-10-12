@@ -44,7 +44,8 @@ const SITE = "https://me.github.io/Vyora/";
 
 describe("siteBaseUrl / recoveryRedirectUrl", () => {
   it("keeps the GitHub Pages sub-path and drops query/hash", () => {
-    expect(siteBaseUrl(undefined, `${SITE}?flow=recovery&token_hash=x#top`)).toBe(SITE);
+    // "" (not undefined): undefined would fall back to NEXT_PUBLIC_SITE_URL, which CI sets.
+    expect(siteBaseUrl("", `${SITE}?flow=recovery&token_hash=x#top`)).toBe(SITE);
   });
   it("prefers NEXT_PUBLIC_SITE_URL and adds a trailing slash", () => {
     expect(siteBaseUrl("https://me.github.io/Vyora", "http://localhost:3000/")).toBe(SITE);
