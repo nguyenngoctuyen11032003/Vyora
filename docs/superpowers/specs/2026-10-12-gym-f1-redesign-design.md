@@ -99,7 +99,7 @@ Keyframes lấy từ mẫu F1: `fadeSlideUp`, `fadeSlideDown`, `fadeSlideLeft`, 
 - Khi chưa có buổi tập: hiện trạng thái rỗng và hai nút "Theo lịch hôm nay" / "Hoạt động khác".
 - Tiêu đề buổi là tên ngày theo lịch (ví dụ "Ngực, vai và tay sau") hoặc tên hoạt động (ví dụ "Cầu lông · Thi đấu"), kèm icon.
 - Đồng hồ `mm:ss` (vượt 60 phút thì `h:mm:ss`) cỡ 110px, chữ gradient trắng; khi đang chạy chữ đổi sang vàng.
-- Dòng "≈ 245 kcal" màu vàng `#EDB40B`, cập nhật mỗi giây. Nhãn nhỏ: "ước lượng · 70 kg · Vừa".
+- Dòng "≈ 257 kcal" màu vàng `#EDB40B`, cập nhật mỗi giây. Nhãn nhỏ: "ước lượng · 70 kg · Vừa".
 - Chỉ buổi theo lịch mới có checklist các bài, bấm để tick hoàn thành. Phần này chỉ để theo dõi, không ảnh hưởng tới kcal. Buổi hoạt động khác hiện thẻ MET và cường độ thay cho checklist.
 - Hai nút lớn: "Tạm dừng" / "Tiếp tục" và "Kết thúc".
 - Khi đồng hồ chạy, giữ màn hình sáng bằng `navigator.wakeLock`. Trình duyệt không hỗ trợ thì bỏ qua, không báo lỗi.
@@ -135,7 +135,7 @@ Keyframes lấy từ mẫu F1: `fadeSlideUp`, `fadeSlideDown`, `fadeSlideLeft`, 
 Công thức giống hệt Fitora (`metKcal`) để số liệu hai app luôn khớp:
 
 ```
-kcal = round(MET × cân_nặng_kg × phút / 60)
+kcal = round(MET × 3.5 × cân_nặng_kg / 200 × phút)      // = MET × kg × giờ × 1,05 — đúng `metKcal` của Fitora (src/lib/energy.ts)
 ```
 
 MET lấy từ **danh mục hoạt động của Fitora** (Compendium of Physical Activities 2011/2024). Một hoạt động gồm `key`, `category` và các `variants` (id, nhãn, MET).
@@ -149,7 +149,7 @@ MET lấy từ **danh mục hoạt động của Fitora** (Compendium of Physica
 
 - Mức mặc định được lưu thành trường `defaultVariant: 'moderate' | 'vigorous'` của mỗi `WorkoutDay` trong `workout-plan.ts`.
 - Không tự đặt mức MET riêng (ví dụ 5.0), vì `variantForMet` của Fitora phải nhận ra được mức để hiển thị đúng nhãn khi người dùng mở buổi tập bên Fitora.
-- Ví dụ 70 kg tập 60 phút: Vừa ra 245 kcal, Nặng ra 420 kcal. Cầu lông Thi đấu (MET theo danh mục) tập 60 phút thì kcal = MET × 70.
+- Ví dụ 70 kg tập 60 phút: Vừa ra 257 kcal, Nặng ra 441 kcal. Cầu lông Thi đấu tập 60 phút thì kcal = round(MET × 3,5 × 70 / 200 × 60).
 - Giao diện luôn ghi "ước lượng" kèm chú thích "sai số khoảng ±20%, đã gồm năng lượng nghỉ".
 
 **Dữ liệu lấy từ Fitora khi đăng nhập** (chỉ đọc, qua RLS của chính người dùng):
@@ -311,7 +311,7 @@ Biến môi trường (đều public, không có secret): `NEXT_PUBLIC_SUPABASE_
 ## 11. Tiêu chí hoàn thành
 
 - Trên màn 360–430px, đi từ mở app đến lúc đồng hồ chạy chỉ mất tối đa 2 lần chạm sau khi đăng nhập.
-- Tập 60 phút ngày T2 với cân nặng 70 kg (lấy từ Fitora) cho ra 245 kcal ở app gym, và Fitora Today hiện thêm đúng 245 kcal đã đốt.
+- Tập 60 phút ngày T2 với cân nặng 70 kg (lấy từ Fitora) cho ra 257 kcal ở app gym, và Fitora Today hiện thêm đúng 257 kcal đã đốt.
 - Chọn được mọi hoạt động trong danh mục Fitora, ví dụ cầu lông, bơi, đạp xe, bóng đá. Mở buổi đó bên Fitora thấy đúng tên hoạt động, mức cường độ và quãng đường.
 - Màn đăng nhập không có chỗ đăng ký. Quên mật khẩu chạy trọn vòng từ email đến mật khẩu mới.
 - Lưu khi mất mạng rồi bật lại mạng: chỉ có một dòng trong DB.

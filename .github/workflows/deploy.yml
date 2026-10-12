@@ -1,0 +1,84 @@
+# Production: push lên main → CI → build static export → GitHub Pages (https://<owner>.github.io/Vyora/).
+# Vyora chỉ là frontend. Database nằm trong repo Note_mytasks (cùng project Supabase với Fitora)
+# và được deploy bởi workflow của repo đó.
+#
+# Cấu hình một lần:
+#   Settings → Pages → Source = "GitHub Actions"
+#   Settings → Secrets and variables → Actions → Variables:
+#     NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY (anon/publishable key, KHÔNG phải service_role)
+#     NEXT_PUBLIC_FITORA_URL (tùy chọn, mặc định https://<owner>.github.io/Fitora/)
+#   Supabase → Auth → URL Configuration → Redirect URLs: https://<owner>.github.io/Vyora/**
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: CI
+    uses: ./.github/workflows/ci.yml
+
+  build:
+    name: Build site
+    needs: verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pages: read # configure-pages đọc cấu hình Pages site
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      NEXT_PUBLIC_BASE_PATH: /Vyora
+      NEXT_PUBLIC_SITE_URL: https://${{ github.repository_owner }}.github.io/Vyora/
+      NEXT_PUBLIC_FITORA_URL: ${{ vars.NEXT_PUBLIC_FITORA_URL || format('https://{0}.github.io/Fitora/', github.repository_owner) }}
+      NEXT_TELEMETRY_DISABLED: 1
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # --strict: thiếu NEXT_PUBLIC_SUPABASE_URL / ANON_KEY → fail ngay, không deploy bản build rỗng.
+      - name: Chặn secret lọt vào biến NEXT_PUBLIC_*
+        run: node .github/scripts/check-public-env.mjs --strict
+
+      # Fail sớm, rõ ràng nếu Pages chưa bật (Settings → Pages → Source = "GitHub Actions").
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
+
+      - run: npm run build
+
+      # Next export đặt asset trong out/_next — thư mục bắt đầu bằng "_" bị Jekyll bỏ qua.
+      - run: touch out/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: out
+
+  pages:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

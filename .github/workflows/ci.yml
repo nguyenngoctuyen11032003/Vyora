@@ -1,0 +1,85 @@
+# Kiểm tra mọi Pull Request (và được deploy.yml gọi lại trước khi deploy).
+# Job web: lint · typecheck · unit test · build (static export, basePath /Vyora).
+# Job fitora-compat: mã chép từ Fitora (src/lib/fitora/) phải khớp Fitora main ⇒ hai app tính kcal như nhau.
+# Không cần secret: build chỉ dùng biến public NEXT_PUBLIC_* (Repository Variables).
+name: CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  web:
+    name: Lint · typecheck · test · build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      NEXT_PUBLIC_BASE_PATH: /Vyora
+      NEXT_PUBLIC_SITE_URL: https://${{ github.repository_owner }}.github.io/Vyora/
+      NEXT_PUBLIC_FITORA_URL: ${{ vars.NEXT_PUBLIC_FITORA_URL || format('https://{0}.github.io/Fitora/', github.repository_owner) }}
+      NEXT_TELEMETRY_DISABLED: 1
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Chặn secret lọt vào biến NEXT_PUBLIC_*
+        run: node .github/scripts/check-public-env.mjs
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Unit tests (vitest)
+        run: npm test
+
+      - name: Build (static export)
+        run: npm run build
+
+      - name: Kiểm tra bản export
+        run: |
+          test -f out/index.html || { echo "::error::Thiếu out/index.html"; exit 1; }
+          grep -q '/Vyora/_next/' out/index.html || { echo "::error::Asset trong out/index.html không có basePath /Vyora"; exit 1; }
+
+  fitora-compat:
+    name: Fitora compat (danh mục hoạt động · công thức kcal)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: Vyora
+
+      - name: Checkout Fitora (main)
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/Fitora
+          ref: main
+          path: Fitora
+          sparse-checkout: |
+            src/data
+            src/lib
+            src/features/workout
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - run: node Vyora/scripts/check-fitora-catalog.mjs Fitora
