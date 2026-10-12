@@ -96,6 +96,14 @@ export function WeekSessionsProvider({ children }: { children: ReactNode }) {
     return () => window.clearTimeout(timer);
   }, [user, reload]);
 
+  // Back online → list() flushes the outbox (sessions saved offline) and refreshes from the server.
+  useEffect(() => {
+    if (!user) return;
+    const onOnline = () => void reload();
+    window.addEventListener("online", onOnline);
+    return () => window.removeEventListener("online", onOnline);
+  }, [user, reload]);
+
   const save = useCallback(
     async (row: FitWorkoutRow) => {
       if (!user) throw new Error("Not signed in");
