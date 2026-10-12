@@ -1,5 +1,8 @@
 export type VideoAspectRatio = "16:9" | "9:16";
 
+/** Variant id of Fitora's `weight_training` activity used to estimate kcal for a plan day (spec §4). */
+export type PlanVariant = "moderate" | "vigorous";
+
 export interface ExerciseVideo {
   embedUrl: string | null;
   title?: string;
@@ -28,5 +31,7 @@ export interface WorkoutDay {
   muscleGroups: string[];
   description?: string;
   isRestDay: boolean;
+  /** Default intensity for kcal: "moderate" (3.5 MET) or "vigorous" (6.0 MET). */
+  defaultVariant: PlanVariant;
   exercises: Exercise[];
 }

@@ -1,4 +1,5 @@
 import type { WorkoutDay } from "@/src/types/workout";
+import { getYouTubeThumbnailUrl } from "@/src/lib/video-utils";
 
 export function getWorkoutDayForJsDay(dayNumber: number, plan: WorkoutDay[]) {
   if (!Number.isInteger(dayNumber) || dayNumber < 0 || dayNumber > 6) {
@@ -27,5 +28,14 @@ export function findNextWorkoutDay(currentDayId: string, plan: WorkoutDay[]) {
     }
   }
 
+  return null;
+}
+
+/** Hero image of a day: thumbnail of the first exercise that has a video, else null. */
+export function getDayHeroImage(day: WorkoutDay | null | undefined): string | null {
+  for (const exercise of day?.exercises ?? []) {
+    const url = getYouTubeThumbnailUrl(exercise.video.embedUrl);
+    if (url) return url;
+  }
   return null;
 }

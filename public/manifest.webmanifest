@@ -1,6 +1,6 @@
 {
-  "name": "Gym Training Plan — Giáo án tập 12 tuần",
-  "short_name": "Gym",
+  "name": "Vyora — Giáo án tập gym",
+  "short_name": "Vyora",
   "id": "./",
   "description": "Lịch tập gym trong tuần, bấm giờ buổi tập, tính kcal và đồng bộ sang Fitora.",
   "categories": ["health", "fitness"],

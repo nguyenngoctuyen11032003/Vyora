@@ -60,7 +60,7 @@ function checkPassword(password: string, strength: boolean): string {
 }
 
 /**
- * Base URL of the deployed app with its GitHub Pages sub-path (/gym-for-beginners/), no query/hash.
+ * Base URL of the deployed app with its GitHub Pages sub-path (/Vyora/), no query/hash.
  * NEXT_PUBLIC_SITE_URL wins when set; location.origin alone would drop the sub-path.
  */
 export function siteBaseUrl(siteUrl: string | undefined = process.env.NEXT_PUBLIC_SITE_URL, href?: string): string {

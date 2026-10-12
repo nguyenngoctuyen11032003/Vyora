@@ -40,14 +40,14 @@ async function rejects(p: Promise<unknown>, code: string, field?: string) {
   return err as GymAuthError;
 }
 
-const SITE = "https://me.github.io/gym-for-beginners/";
+const SITE = "https://me.github.io/Vyora/";
 
 describe("siteBaseUrl / recoveryRedirectUrl", () => {
   it("keeps the GitHub Pages sub-path and drops query/hash", () => {
     expect(siteBaseUrl(undefined, `${SITE}?flow=recovery&token_hash=x#top`)).toBe(SITE);
   });
   it("prefers NEXT_PUBLIC_SITE_URL and adds a trailing slash", () => {
-    expect(siteBaseUrl("https://me.github.io/gym-for-beginners", "http://localhost:3000/")).toBe(SITE);
+    expect(siteBaseUrl("https://me.github.io/Vyora", "http://localhost:3000/")).toBe(SITE);
   });
   it("builds <base>?flow=recovery (query form, no hash route)", () => {
     expect(recoveryRedirectUrl(SITE)).toBe(`${SITE}?flow=recovery`);

@@ -13,3 +13,11 @@ export function useMediaQuery(query: string, defaultValue = false) {
     () => defaultValue,
   );
 }
+
+/** True when the user asked for reduced motion (count-ups jump to the final value, no entrances). */
+export function usePrefersReducedMotion() {
+  return useMediaQuery("(prefers-reduced-motion: reduce)", false);
+}
+
+/** Layout breakpoint of the shell: ≥768px shows the three-phone F1 layout. */
+export const DESKTOP_QUERY = "(min-width: 768px)";

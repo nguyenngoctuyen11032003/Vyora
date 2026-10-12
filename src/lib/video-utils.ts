@@ -30,3 +30,18 @@ export function getYouTubeWatchUrl(embedUrl: string, portrait: boolean): string 
   const id = new URL(embedUrl).pathname.split("/")[2];
   return portrait ? `https://www.youtube.com/shorts/${id}` : `https://www.youtube.com/watch?v=${id}`;
 }
+
+/** 11-char video id of a valid embed URL, else null. */
+export function getYouTubeId(embedUrl: string | null | undefined): string | null {
+  if (!embedUrl || !isValidYouTubeEmbedUrl(embedUrl)) {
+    return null;
+  }
+
+  return new URL(embedUrl).pathname.split("/")[2];
+}
+
+/** `https://i.ytimg.com/vi/<id>/hqdefault.jpg` for a valid embed URL, else null. */
+export function getYouTubeThumbnailUrl(embedUrl: string | null | undefined): string | null {
+  const id = getYouTubeId(embedUrl);
+  return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : null;
+}

@@ -8,7 +8,7 @@ import { GymAuthError } from "./errors";
 const USER = { id: "u-1", email: "a@b.co" };
 const ok = (data: unknown = {}) => Promise.resolve({ data, error: null });
 const fail = (error: unknown) => Promise.resolve({ data: null, error });
-const REDIRECT = "https://me.github.io/gym-for-beginners/?flow=recovery";
+const REDIRECT = "https://me.github.io/Vyora/?flow=recovery";
 
 function fake(over: Record<string, unknown> = {}, session: unknown = { user: USER }) {
   const auth = {
@@ -31,7 +31,7 @@ describe("createGymSupabaseClient", () => {
     expect(createGymSupabaseClient("https://x.supabase.co", " ")).toBeNull();
   });
   it("persists the session under its own storage key", () => {
-    expect(AUTH_STORAGE_KEY).toBe("gym.auth");
+    expect(AUTH_STORAGE_KEY).toBe("vyora.auth");
     expect(createGymSupabaseClient("https://x.supabase.co", "anon")).not.toBeNull();
   });
 });

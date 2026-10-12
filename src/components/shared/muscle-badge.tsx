@@ -1,14 +1,15 @@
 import { cn } from "@/src/lib/cn";
 
+/** Muscle-group tag (static, not a button). */
 export function MuscleBadge({ label, className }: { label: string; className?: string }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-md border border-border bg-background/40 px-2 py-1 text-xs font-medium text-muted-foreground",
+        "inline-flex min-h-7 items-center gap-1.5 rounded-full bg-stat px-3 text-[13px] font-medium text-fg-muted",
         className,
       )}
     >
-      <span aria-hidden="true" className="size-1 rotate-45 bg-accent/80" />
+      <span aria-hidden="true" className="size-1 rounded-full bg-gold" />
       {label}
     </span>
   );

@@ -1,33 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Barlow_Condensed, Be_Vietnam_Pro, JetBrains_Mono } from "next/font/google";
+import { Albert_Sans } from "next/font/google";
 import { asset } from "@/src/lib/env";
 import "./globals.css";
 
-const bodyFont = Be_Vietnam_Pro({
-  variable: "--font-body",
-  subsets: ["latin", "vietnamese"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-});
-
-const displayFont = Barlow_Condensed({
-  variable: "--font-display",
-  subsets: ["latin", "vietnamese"],
-  weight: ["500", "600", "700"],
-  display: "swap",
-});
-
-const monoFont = JetBrains_Mono({
-  variable: "--font-mono",
-  subsets: ["latin", "vietnamese"],
-  weight: ["400", "500"],
+const albertSans = Albert_Sans({
+  variable: "--font-albert",
+  subsets: ["latin", "latin-ext"],
+  weight: ["300", "400", "500", "600", "700", "800"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Gym Training Plan | Giáo án tập 12 tuần",
-  description:
-    "Website xem lịch tập gym trong tuần, danh sách bài tập và video hướng dẫn động tác.",
+  title: "Vyora | Giáo án, bấm giờ và calo",
+  description: "Giáo án tập gym theo ngày, video hướng dẫn, bấm giờ buổi tập và ước lượng calo đồng bộ với Fitora.",
   // Brand mark and icon set are shared with Fitora (copied from Fitora/public).
   icons: {
     icon: [
@@ -40,8 +25,8 @@ export const metadata: Metadata = {
   },
   manifest: asset("/manifest.webmanifest"),
   openGraph: {
-    title: "Gym Training Plan | Giáo án tập 12 tuần",
-    description: "Lịch tập gym trong tuần và video hướng dẫn động tác.",
+    title: "Vyora",
+    description: "Giáo án tập gym, bấm giờ buổi tập và calo đồng bộ với Fitora.",
     type: "website",
     locale: "vi_VN",
   },
@@ -51,7 +36,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#0a0b0a",
+  themeColor: "#0a0e1c",
   colorScheme: "dark",
 };
 
@@ -61,11 +46,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="vi"
-      className={`${bodyFont.variable} ${displayFont.variable} ${monoFont.variable} h-full antialiased`}
-    >
-      <body className="min-h-full">{children}</body>
+    <html lang="vi" className={`${albertSans.variable} h-full antialiased`}>
+      <body className="min-h-full font-sans">{children}</body>
     </html>
   );
 }

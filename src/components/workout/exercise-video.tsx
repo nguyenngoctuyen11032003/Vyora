@@ -22,11 +22,11 @@ export function ExerciseVideo({ video }: { video: ExerciseVideoType }) {
     <div className="mx-auto" style={portrait ? { width: "min(100%, calc(58dvh * 9 / 16))" } : undefined}>
       <div
         className={cn(
-          "relative overflow-hidden rounded-[20px] border border-border-strong bg-[#050605] shadow-[0_24px_60px_-30px_rgb(0_0_0/0.9)]",
+          "relative overflow-hidden rounded-[20px] border border-line-strong bg-black shadow-[0_24px_60px_-30px_rgb(0_0_0/0.9)]",
           portrait ? "aspect-[9/16]" : "aspect-video w-full",
         )}
       >
-        {!loaded && <Skeleton className="absolute inset-0 size-full rounded-none bg-muted" />}
+        {!loaded && <Skeleton className="absolute inset-0 size-full rounded-none bg-white/[0.06]" />}
         <iframe
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
@@ -40,7 +40,7 @@ export function ExerciseVideo({ video }: { video: ExerciseVideoType }) {
       </div>
       {watchUrl && (
         <a
-          className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-xl border border-border-strong px-4 text-sm font-medium text-muted-foreground transition-[background-color,border-color,color] duration-200 hover:border-accent hover:text-foreground"
+          className="glass mt-4 inline-flex min-h-11 items-center gap-2 rounded-full px-5 text-[15px] font-medium text-fg"
           href={watchUrl}
           rel="noopener noreferrer"
           target="_blank"

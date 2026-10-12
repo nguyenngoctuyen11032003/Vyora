@@ -1,9 +1,9 @@
 // The one Supabase client of the gym app (shared Note_mytasks project → same auth.users as Fitora).
-// storageKey 'gym.auth' differs from Fitora ('fitora.auth') and Note_mytasks ('nm.auth'): the apps share
+// storageKey 'vyora.auth' differs from Fitora ('fitora.auth') and Note_mytasks ('nm.auth'): the apps share
 // the *.github.io origin, and signing out of one must not sign out of the others.
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-export const AUTH_STORAGE_KEY = "gym.auth";
+export const AUTH_STORAGE_KEY = "vyora.auth";
 
 let cached: SupabaseClient | null | undefined;
 

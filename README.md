@@ -1,10 +1,10 @@
-# gym-for-beginners
+# Vyora
 
 A mobile-first weekly training plan viewer for gym beginners, built with Next.js.
 
 ## Overview
 
-Gym Training Plan ("Giáo án tập 12 tuần") is a static frontend that presents a beginner workout schedule for the week. It is designed to be used on a phone inside the gym: open the page, see today's session, scan sets and reps, and open an exercise's instructions or video in two or three taps.
+Vyora (formerly gym-for-beginners) is a static frontend that presents a beginner workout schedule for the week. It is designed to be used on a phone inside the gym: open the page, see today's session, scan sets and reps, and open an exercise's instructions or video in two or three taps.
 
 All workout data is stored locally in the codebase (`src/data/workout-plan.ts`). There is no backend, database, or user account. The interface is in Vietnamese.
 
@@ -57,8 +57,8 @@ docs/                 Design spec and implementation plan
 ### Installation
 
 ```bash
-git clone https://github.com/nguyenngoctuyen11032003/gym-for-beginners.git
-cd gym-for-beginners
+git clone https://github.com/nguyenngoctuyen11032003/Vyora.git
+cd Vyora
 npm install
 npm run dev
 ```

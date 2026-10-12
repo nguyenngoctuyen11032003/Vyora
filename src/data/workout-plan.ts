@@ -169,6 +169,7 @@ export const workoutPlan: WorkoutDay[] = [
     muscleGroups: ["Ngực", "Vai", "Tay sau"],
     description: "Ưu tiên kỹ thuật kiểm soát và tăng tải có chủ đích.",
     isRestDay: false,
+    defaultVariant: "moderate",
     exercises: [
       exercise("bench-press", "Bench Press", "Đẩy ngực thanh đòn", ["Ngực"], 5, "14 / 12 / 10 / 8 / 6", {
         instructions: ["Giữ bả vai ổn định và kiểm soát thanh đòn trong toàn bộ chuyển động."],
@@ -205,6 +206,7 @@ export const workoutPlan: WorkoutDay[] = [
     muscleGroups: ["Chân", "Mông", "Core"],
     description: "Giữ thân người ổn định và ưu tiên biên độ chuyển động an toàn.",
     isRestDay: false,
+    defaultVariant: "vigorous",
     exercises: [
       exercise("squat", "Squat", "Gánh đùi", ["Đùi", "Mông"], 5, "14 / 12 / 10 / 8 / 6", {
         video: videos.squat,
@@ -238,6 +240,7 @@ export const workoutPlan: WorkoutDay[] = [
     muscleGroups: ["Lưng", "Xô", "Tay trước"],
     description: "Kéo bằng khuỷu tay và giữ cột sống trung lập.",
     isRestDay: false,
+    defaultVariant: "moderate",
     exercises: [
       exercise("pull-up", "Pull-up", "Hít xà", ["Xô", "Lưng"], 5, "Tối đa", {
         video: videos.pullUp,
@@ -271,6 +274,7 @@ export const workoutPlan: WorkoutDay[] = [
     muscleGroups: ["Lưng dưới", "Chân", "Mông"],
     description: "Tập trung vào kỹ thuật hip hinge và kiểm soát nhịp hạ tạ.",
     isRestDay: false,
+    defaultVariant: "vigorous",
     exercises: [
       exercise("deadlift", "Deadlift", "Kéo tạ", ["Lưng dưới", "Mông", "Đùi sau"], 5, "14 / 12 / 10 / 8 / 6", {
         video: videos.deadlift,
@@ -304,6 +308,7 @@ export const workoutPlan: WorkoutDay[] = [
     muscleGroups: ["Vai", "Ngực", "Tay sau"],
     description: "Ưu tiên vai ổn định, chuyển động mượt và không khóa khớp.",
     isRestDay: false,
+    defaultVariant: "moderate",
     exercises: [
       exercise("overhead-press", "Overhead Press (OHP)", "Đẩy vai thanh đòn", ["Vai"], 5, "14 / 12 / 10 / 8 / 6", {
         video: videos.overheadPress,
@@ -340,6 +345,7 @@ export const workoutPlan: WorkoutDay[] = [
     muscleGroups: ["Phục hồi"],
     description: "Nghỉ ngơi, giãn cơ nhẹ hoặc đi bộ để cơ thể sẵn sàng cho tuần mới.",
     isRestDay: true,
+    defaultVariant: "moderate",
     exercises: [],
   },
   {
@@ -351,6 +357,7 @@ export const workoutPlan: WorkoutDay[] = [
     muscleGroups: ["Phục hồi"],
     description: "Dành thời gian ngủ đủ, vận động nhẹ và chuẩn bị cho buổi tập Thứ 2.",
     isRestDay: true,
+    defaultVariant: "moderate",
     exercises: [],
   },
 ];

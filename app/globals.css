@@ -1,29 +1,67 @@
 @import "tailwindcss";
 
 /*
- * Dark-only by design: matches the logo and in-gym use.
- * Visual language: architectural drawing — hairline rules, a faint blueprint grid,
- * measured labels in mono and condensed display numerals. One accent (lime).
- * Radius scale: surfaces 20px, controls 12px, chips 6px.
+ * F1 redesign tokens (spec §3.1). Dark only. Navy background, white text, one gold accent
+ * (#EDB40B: running clock, kcal, primary buttons), F1 red only for the menu overlay.
+ * Surfaces: glass card (rgba 20,20,30,.8 + blur 16) for panels, stat card (white 6 %, radius 24)
+ * for numbers, coffee-style liquid glass for secondary buttons.
  */
 :root {
-  --background: #0a0b0a;
-  --foreground: #eef0ea;
-  --card: #111311;
-  --card-elevated: #171a17;
-  --muted: #1e221e;
-  --muted-foreground: #9aa196;
-  --subtle-foreground: #6c7368;
-  --border: #232723;
-  --border-strong: #343a33;
-  --accent: #c2ec6b;
-  --accent-soft: rgb(194 236 107 / 12%);
-  --accent-foreground: #11140c;
-  --danger: #ff7770;
-  --grid-line: rgb(238 240 234 / 3.2%);
+  --bg: #0a0e1c;
+  --bg-raised: #121729;
+  --fg: #ffffff;
+  --fg-muted: rgb(255 255 255 / 60%);
+  --fg-subtle: rgb(255 255 255 / 45%);
+  --gold: #edb40b;
+  --gold-soft: rgb(237 180 11 / 14%);
+  --gold-ink: #161000;
+  --f1-red: #e10600;
+  --f1-red-dark: #8b0000;
+  --f1-red-deep: #1a0000;
+  --danger: #ff7a70;
+  --success: #6fdc8c;
+  --glass-card: rgb(20 20 30 / 80%);
+  --glass-border: rgb(255 255 255 / 10%);
+  --stat: rgb(255 255 255 / 6%);
+  --line: rgb(255 255 255 / 10%);
+  --line-strong: rgb(255 255 255 / 18%);
+  --radius-card: 24px;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Legacy names still used by src/components/workout/* until they are restyled. */
+  --background: var(--bg);
+  --foreground: var(--fg);
+  --card: #141a2c;
+  --card-elevated: #161c30;
+  --muted: #1c2338;
+  --muted-foreground: rgb(255 255 255 / 62%);
+  --subtle-foreground: rgb(255 255 255 / 45%);
+  --border: rgb(255 255 255 / 10%);
+  --border-strong: rgb(255 255 255 / 18%);
+  --accent: var(--gold);
+  --accent-soft: var(--gold-soft);
+  --accent-foreground: var(--gold-ink);
 }
 
 @theme inline {
+  --color-bg: var(--bg);
+  --color-bg-raised: var(--bg-raised);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-gold-ink: var(--gold-ink);
+  --color-f1-red: var(--f1-red);
+  --color-f1-red-dark: var(--f1-red-dark);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --color-glass-card: var(--glass-card);
+  --color-glass-border: var(--glass-border);
+  --color-stat: var(--stat);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -36,166 +74,305 @@
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-accent-foreground: var(--accent-foreground);
-  --color-danger: var(--danger);
-  --font-sans: var(--font-body);
-  --font-display: var(--font-display);
-  --font-mono: var(--font-mono);
+
+  --font-sans: var(--font-albert), "Albert Sans", system-ui, sans-serif;
+  --font-display: var(--font-albert), "Albert Sans", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --radius-card: 24px;
+
+  /* Entrance animations of the F1 template: `animate-fade-slide-up` etc. Fill mode both. */
+  --animate-fade-slide-up: fadeSlideUp 0.9s var(--ease-out-expo) both;
+  --animate-fade-slide-down: fadeSlideDown 0.7s var(--ease-out-expo) both;
+  --animate-fade-slide-left: fadeSlideLeft 0.9s var(--ease-out-expo) both;
+  --animate-fade-slide-right: fadeSlideRight 0.9s var(--ease-out-expo) both;
+  --animate-scale-in: scaleIn 1s var(--ease-out-expo) both;
+  --animate-fade-in: fadeIn 0.8s ease-out both;
+  --animate-speed-reveal: speedReveal 0.8s var(--ease-out-expo) both;
+  --animate-fade-rise: fadeRise 0.7s var(--ease-out-expo) both;
+  --animate-race-line: raceLineLeft 0.9s var(--ease-out-expo) both;
 }
 
-* {
-  box-sizing: border-box;
-  border-color: var(--border);
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeSlideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeSlideLeft {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeSlideRight {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fadeRise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes speedReveal {
+  0% { opacity: 0; transform: translateX(-100%) skewX(-8deg); filter: blur(8px); }
+  60% { opacity: 1; transform: translateX(4%) skewX(-2deg); filter: blur(0); }
+  100% { opacity: 1; transform: translateX(0) skewX(0); filter: blur(0); }
+}
+@keyframes raceLineLeft {
+  0% { transform: scaleX(0); transform-origin: left; }
+  70% { transform: scaleX(1.1); transform-origin: left; }
+  100% { transform: scaleX(1); transform-origin: left; }
+}
+@keyframes menuItemIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes sheetUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes sheetDown {
+  from { transform: translateY(0); }
+  to { transform: translateY(100%); }
+}
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes overlayOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes attention {
+  0% { box-shadow: 0 0 0 0 rgb(237 180 11 / 0%); }
+  30% { box-shadow: 0 0 0 4px rgb(237 180 11 / 70%); }
+  100% { box-shadow: 0 0 0 0 rgb(237 180 11 / 0%); }
 }
 
-html {
-  background: var(--background);
-  scroll-behavior: smooth;
+/* Animation delays for the entrance animations: anim-delay-100 … anim-delay-1600 (0.1 s steps).
+   (Tailwind's own delay-* sets transition-delay, so these are separate.) */
+@utility anim-delay-* {
+  animation-delay: calc(--value(integer) * 1ms);
 }
 
-body {
-  margin: 0;
-  min-height: 100dvh;
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-body), system-ui, sans-serif;
-  text-rendering: optimizeLegibility;
-  overflow-x: hidden;
-}
-
-/* Blueprint grid with a soft vignette, fixed behind all content. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image:
-    radial-gradient(120% 70% at 85% -10%, rgb(194 236 107 / 7%), transparent 55%),
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: auto, 48px 48px, 48px 48px;
-  background-position: 0 0, -1px -1px, -1px -1px;
-  mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
-}
-
-h1,
-h2,
-h3 {
-  text-wrap: balance;
-}
-
-p {
-  text-wrap: pretty;
-}
-
-button,
-a {
-  -webkit-tap-highlight-color: transparent;
-}
-
-button {
-  font: inherit;
-}
-
-::selection {
-  background: rgb(194 236 107 / 26%);
-  color: var(--foreground);
-}
-
-.scrollbar-none {
-  scrollbar-width: none;
-}
-
-.scrollbar-none::-webkit-scrollbar {
-  display: none;
-}
-
-.tabular {
-  font-variant-numeric: tabular-nums;
-}
-
-/* Small measured label, used like an annotation on a drawing. */
-.label-mono {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-/* Corner crop marks on a surface. */
-.crop-marks {
-  position: relative;
-}
-
-.crop-marks::before,
-.crop-marks::after {
-  content: "";
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  pointer-events: none;
-  border-color: var(--accent);
-  opacity: 0.7;
-}
-
-.crop-marks::before {
-  top: -1px;
-  left: -1px;
-  border-top: 1px solid;
-  border-left: 1px solid;
-  border-top-left-radius: 4px;
-}
-
-.crop-marks::after {
-  right: -1px;
-  bottom: -1px;
-  border-right: 1px solid;
-  border-bottom: 1px solid;
-  border-bottom-right-radius: 4px;
-}
-
-/* Fine ruler ticks along a hairline. */
-.ruler {
-  height: 8px;
-  background-image:
-    linear-gradient(90deg, var(--border-strong) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border) 1px, transparent 1px);
-  background-size: 48px 8px, 8px 4px;
-  background-repeat: repeat-x;
-  background-position: 0 0, 0 4px;
-}
-
-.pb-safe {
-  padding-bottom: max(1rem, env(safe-area-inset-bottom));
-}
-
-.reveal-in {
-  animation: reveal-in 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes reveal-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+/* Element defaults live in the base layer so Tailwind utilities always win. */
+@layer base {
+  * {
+    box-sizing: border-box;
+    border-color: var(--line);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  html {
+    background: var(--bg);
+    color-scheme: dark;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-albert), "Albert Sans", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button {
+    font: inherit;
+  }
+
+  ::selection {
+    background: rgb(237 180 11 / 35%);
+    color: var(--fg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
   }
 }
 
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+/* Reusable classes live in the components layer: utilities can still override them. */
+@layer components {
+  /* ---------- surfaces ---------- */
+
+  /* Glass panel of the F1 template (driver cards). */
+  .glass-card {
+    background: var(--glass-card);
+    border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+
+  /* Stat card of the coffee template. */
+  .stat-card {
+    background: var(--stat);
+    border-radius: var(--radius-card);
+  }
+
+  /* Liquid-glass button of the coffee template (edge highlights, light refraction blur). */
+  .glass {
+    border: 0;
+    background: rgb(255 255 255 / 3%);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 22%),
+      inset 0 -1px 0 rgb(255 255 255 / 6%),
+      inset 1px 0 0 rgb(255 255 255 / 9%),
+      inset -1px 0 0 rgb(255 255 255 / 9%),
+      0 6px 20px rgb(0 0 0 / 25%);
+    -webkit-backdrop-filter: blur(2px) saturate(1.3);
+    backdrop-filter: blur(2px) saturate(1.3);
+    transition: transform 160ms var(--ease-out-expo), background-color 160ms ease;
+  }
+  .glass:hover {
+    background: rgb(255 255 255 / 7%);
+  }
+  .glass:active {
+    transform: scale(0.96);
+  }
+
+  /* Square nav button of the F1 template. */
+  .glass-nav {
+    background: rgb(255 255 255 / 15%);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+
+  /* Red menu overlay. */
+  .f1-menu-bg {
+    background: linear-gradient(160deg, #1a0000 0%, #8b0000 40%, #e10600 100%);
+  }
+
+  /* Bottom blur of the hero photo (6 px, masked from the middle down). */
+  .blur-mask {
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    -webkit-mask: linear-gradient(to bottom, transparent 0%, black 50%);
+    mask: linear-gradient(to bottom, transparent 0%, black 50%);
+  }
+
+  /* Big number with the template's white → transparent gradient. */
+  .text-fade {
+    background: linear-gradient(to bottom, #fff 0%, rgb(255 255 255 / 40%) 50%, transparent 85%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  /* Softer variant that stays readable to the bottom (clock, stat numbers). */
+  .text-fade-soft {
+    background: linear-gradient(to bottom, #fff 0%, rgb(255 255 255 / 72%) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Display numerals 110–120 px. */
+  .num-display {
+    font-weight: 600;
+    letter-spacing: -0.06em;
+    line-height: 0.78;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pb-safe {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  /* Legacy mono label (workout components). */
+  .label-mono {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* ---------- phone mockup (F1 template sizing) ---------- */
+
+  .phone-frame {
+    aspect-ratio: 390 / 844;
+    width: clamp(200px, 75vw, 340px);
+  }
+  @media (min-width: 768px) {
+    .phone-frame {
+      /* Template: min(25vw, 42vh). The last term keeps the whole frame inside short laptop screens. */
+      width: min(25vw, 42vh, calc((100dvh - 72px) * 390 / 844));
+    }
+  }
+  @media (min-width: 1280px) {
+    .phone-frame {
+      width: min(28vw, 48vh, 430px, calc((100dvh - 72px) * 390 / 844));
+    }
+  }
+  .phone-frame[data-single="true"] {
+    width: min(86vw, 400px, calc((100dvh - 64px) * 390 / 844));
+  }
+
+  .phone-attention {
+    animation: attention 1.1s ease-out 1;
+  }
+
+  /* ---------- overlays ---------- */
+
+  .sheet-content[data-state="open"] {
+    animation: sheetUp 420ms var(--ease-out-expo) both;
+  }
+  .sheet-content[data-state="closed"] {
+    animation: sheetDown 240ms ease-in both;
+  }
+  .overlay-fade[data-state="open"] {
+    animation: overlayIn 400ms ease-out both;
+  }
+  .overlay-fade[data-state="closed"] {
+    animation: overlayOut 240ms ease-in both;
+  }
+  .menu-item-in {
+    animation: menuItemIn 0.6s var(--ease-out-expo) both;
+  }
 }
 
+/* ---------- reduced motion: everything static, final state ---------- */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }

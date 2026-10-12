@@ -1,89 +1,75 @@
 "use client";
 
-import { Dumbbell, Moon } from "lucide-react";
+import { Moon } from "lucide-react";
+import { useRef, type KeyboardEvent } from "react";
+import { weekdayShortOf } from "@/src/components/workout/day-summary";
 import { cn } from "@/src/lib/cn";
 import type { WorkoutDay } from "@/src/types/workout";
 
 interface WeeklyDaySelectorProps {
   plan: WorkoutDay[];
   selectedDayId: string;
-  todayId: string;
+  todayId: string | null;
   onSelectDay: (dayId: string) => void;
+  /** id of the panel the tabs control (the exercise list). */
+  panelId?: string;
+  className?: string;
 }
 
-export function WeeklyDaySelector({ plan, selectedDayId, todayId, onSelectDay }: WeeklyDaySelectorProps) {
-  return (
-    <div
-      aria-label="Chọn ngày tập luyện"
-      className="scrollbar-none -mx-4 flex snap-x snap-mandatory scroll-px-4 gap-2 overflow-x-auto px-4 py-1 sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-7 lg:overflow-visible lg:px-0"
-      role="tablist"
-    >
-      {plan.map((day, index) => {
-        const isSelected = day.id === selectedDayId;
-        const isToday = day.id === todayId;
-        const DayIcon = day.isRestDay ? Moon : Dumbbell;
+/**
+ * 7-day glass chip strip (T2 … CN). Tabs with roving focus (←/→/Home/End). Today carries a gold dot +
+ * "Hôm nay" for screen readers; rest days a moon icon — never colour alone.
+ */
+export function WeeklyDaySelector({ plan, selectedDayId, todayId, onSelectDay, panelId, className }: WeeklyDaySelectorProps) {
+  const refs = useRef<(HTMLButtonElement | null)[]>([]);
 
+  const onKeyDown = (e: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    const last = plan.length - 1;
+    const next =
+      e.key === "ArrowRight" ? (index === last ? 0 : index + 1)
+      : e.key === "ArrowLeft" ? (index === 0 ? last : index - 1)
+      : e.key === "Home" ? 0
+      : e.key === "End" ? last
+      : null;
+    if (next === null) return;
+    e.preventDefault();
+    onSelectDay(plan[next].id);
+    refs.current[next]?.focus();
+  };
+
+  return (
+    <div aria-label="Chọn ngày tập" role="tablist" className={cn("grid grid-cols-7 gap-1.5", className)}>
+      {plan.map((day, index) => {
+        const selected = day.id === selectedDayId;
+        const isToday = day.id === todayId;
         return (
           <button
             key={day.id}
-            aria-selected={isSelected}
-            className={cn(
-              "group relative flex min-h-[112px] min-w-[118px] snap-start flex-col overflow-hidden rounded-[18px] border px-3.5 pb-3 pt-3 text-left transition-[background-color,border-color,color,transform,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.97] lg:min-w-0",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-              isSelected
-                ? "border-accent bg-accent text-accent-foreground shadow-[0_12px_32px_-12px_rgb(194_236_107/0.45)]"
-                : "border-border bg-card/80 text-foreground hover:-translate-y-0.5 hover:border-border-strong hover:bg-card-elevated",
-              day.isRestDay && !isSelected && "border-dashed bg-transparent",
-            )}
-            onClick={() => onSelectDay(day.id)}
-            role="tab"
+            ref={(el) => {
+              refs.current[index] = el;
+            }}
             type="button"
-          >
-            <span className="flex w-full items-center justify-between">
-              <span
-                className={cn(
-                  "label-mono tabular",
-                  isSelected ? "text-accent-foreground/60" : "text-subtle-foreground",
-                )}
-              >
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <DayIcon
-                aria-hidden="true"
-                className={cn(
-                  "size-3.5",
-                  isSelected ? "text-accent-foreground/70" : "text-subtle-foreground group-hover:text-muted-foreground",
-                )}
-                strokeWidth={1.5}
-              />
-            </span>
-
-            <span className="mt-2 whitespace-nowrap font-display text-[22px] font-semibold uppercase leading-none tracking-[0.01em]">
-              {day.shortLabel}
-            </span>
-            <span
-              className={cn(
-                "mt-1.5 line-clamp-2 text-xs leading-[1.4]",
-                isSelected ? "text-accent-foreground/75" : "text-muted-foreground",
-              )}
-            >
-              {day.isRestDay ? "Ngày nghỉ" : day.muscleGroups.join(", ")}
-            </span>
-
-            {isToday && (
-              <span
-                className={cn(
-                  "mt-auto inline-flex w-fit items-center gap-1.5 whitespace-nowrap pt-2 text-[11px] font-semibold",
-                  isSelected ? "text-accent-foreground" : "text-accent",
-                )}
-              >
-                <span
-                  aria-hidden="true"
-                  className={cn("size-1.5 rounded-full", isSelected ? "bg-accent-foreground" : "bg-accent")}
-                />
-                Hôm nay
-              </span>
+            role="tab"
+            id={`day-tab-${day.id}`}
+            aria-selected={selected}
+            aria-controls={panelId}
+            tabIndex={selected ? 0 : -1}
+            onClick={() => onSelectDay(day.id)}
+            onKeyDown={(e) => onKeyDown(e, index)}
+            className={cn(
+              // The ::before fills the 6 px gap so the touch target stays ≥ 44 px on 360 px phones (chip ≈ 41 px).
+              "relative flex h-14 min-w-0 flex-col items-center justify-center gap-1 rounded-[18px] before:absolute before:inset-y-0 before:-inset-x-[3px] before:content-[''] text-[15px] leading-none tracking-[-0.02em] transition-[background-color,color,transform] duration-150 active:scale-[0.96]",
+              selected ? "bg-white font-semibold text-[#0a0e1c]" : "glass font-medium text-fg",
             )}
+          >
+            <span aria-hidden="true">{weekdayShortOf(day)}</span>
+            <span className="sr-only">{day.fullLabel}</span>
+            <span aria-hidden="true" className="flex h-2.5 items-center gap-1">
+              {isToday && <span className={cn("size-1.5 rounded-full", selected ? "bg-[#0a0e1c]" : "bg-gold")} />}
+              {day.isRestDay && <Moon className={cn("size-2.5", selected ? "text-[#0a0e1c]/70" : "text-fg-subtle")} strokeWidth={2.2} />}
+            </span>
+            {isToday && <span className="sr-only">, hôm nay</span>}
+            {day.isRestDay && <span className="sr-only">, ngày nghỉ</span>}
           </button>
         );
       })}
