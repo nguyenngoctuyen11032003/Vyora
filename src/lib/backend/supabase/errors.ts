@@ -2,7 +2,10 @@
 // Fitora (src/services/errors.ts) so the shared account behaves identically in both apps.
 
 export type GymAuthErrorCode =
-  | "invalid_input"
+  | "missing_email"
+  | "missing_password"
+  | "password_too_short"
+  | "password_mismatch"
   | "invalid_credentials"
   | "email_not_confirmed"
   | "same_password"

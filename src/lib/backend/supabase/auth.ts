@@ -46,15 +46,15 @@ async function run<T>(p: AuthResult<T>, fallback?: string): Promise<T> {
 
 export function normalizeEmail(email: string): string {
   const e = typeof email === "string" ? email.trim() : "";
-  if (!e) throw new GymAuthError("invalid_input", "Hãy nhập email.", "email");
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) throw new GymAuthError("invalid_input", "Địa chỉ email không hợp lệ.", "email");
+  if (!e) throw new GymAuthError("missing_email", "Hãy nhập email.", "email");
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) throw new GymAuthError("invalid_email", "Địa chỉ email không hợp lệ.", "email");
   return e.toLowerCase();
 }
 
 function checkPassword(password: string, strength: boolean): string {
-  if (typeof password !== "string" || password === "") throw new GymAuthError("invalid_input", "Hãy nhập mật khẩu.", "password");
+  if (typeof password !== "string" || password === "") throw new GymAuthError("missing_password", "Hãy nhập mật khẩu.", "password");
   if (strength && password.length < MIN_PASSWORD) {
-    throw new GymAuthError("invalid_input", `Mật khẩu tối thiểu ${MIN_PASSWORD} ký tự.`, "password");
+    throw new GymAuthError("password_too_short", `Mật khẩu tối thiểu ${MIN_PASSWORD} ký tự.`, "password");
   }
   return password;
 }
@@ -174,7 +174,7 @@ export async function completeAuthLink(c: AuthClientLike | null, link: AuthLink)
 export async function updatePassword(c: AuthClientLike | null, password: string, confirm?: string): Promise<void> {
   const p = checkPassword(password, true);
   if (confirm !== undefined && confirm !== password) {
-    throw new GymAuthError("invalid_input", "Mật khẩu nhập lại không khớp.", "password");
+    throw new GymAuthError("password_mismatch", "Mật khẩu nhập lại không khớp.", "password");
   }
   await run(client(c).auth.updateUser({ password: p }));
 }

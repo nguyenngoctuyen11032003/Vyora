@@ -62,9 +62,9 @@ describe("signIn", () => {
   });
   it("validates input before calling the server", async () => {
     const c = fakeClient();
-    await rejects(signIn(c, "", "x"), "invalid_input", "email");
-    await rejects(signIn(c, "not-an-email", "x"), "invalid_input", "email");
-    await rejects(signIn(c, "a@b.co", ""), "invalid_input", "password");
+    await rejects(signIn(c, "", "x"), "missing_email", "email");
+    await rejects(signIn(c, "not-an-email", "x"), "invalid_email", "email");
+    await rejects(signIn(c, "a@b.co", ""), "missing_password", "password");
     expect(c.auth.signInWithPassword).not.toHaveBeenCalled();
   });
   it("maps wrong credentials to a Vietnamese message", async () => {
@@ -106,7 +106,7 @@ describe("requestPasswordReset", () => {
   });
   it("rejects an invalid email without calling the server", async () => {
     const c = fakeClient();
-    await rejects(requestPasswordReset(c, "nope", SITE), "invalid_input", "email");
+    await rejects(requestPasswordReset(c, "nope", SITE), "invalid_email", "email");
     expect(c.auth.resetPasswordForEmail).not.toHaveBeenCalled();
   });
   it("maps the e-mail rate limit", async () => {
@@ -175,8 +175,8 @@ describe("completeAuthLink", () => {
 describe("updatePassword", () => {
   it("enforces 8 characters and a matching confirmation before calling the server", async () => {
     const c = fakeClient();
-    await rejects(updatePassword(c, "1234567"), "invalid_input", "password");
-    await rejects(updatePassword(c, "12345678", "12345679"), "invalid_input", "password");
+    await rejects(updatePassword(c, "1234567"), "password_too_short", "password");
+    await rejects(updatePassword(c, "12345678", "12345679"), "password_mismatch", "password");
     expect(c.auth.updateUser).not.toHaveBeenCalled();
     await updatePassword(c, "12345678", "12345678");
     expect(c.auth.updateUser).toHaveBeenCalledWith({ password: "12345678" });
